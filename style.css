@@ -189,3 +189,33 @@ footer {
         transform: scale(1);
     }
 }
+
+/* Confetti Animation */
+.confetti {
+  position: fixed;
+  top: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  opacity: 0.9;
+  animation: fall 2s linear forwards;
+  z-index: 1000;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+/* Streak Display */
+.streak {
+  font-size: 1rem;
+  color: #fff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  transition: transform 0.3s ease;
+}
+.streak:hover {
+  transform: scale(1.1);
+}
