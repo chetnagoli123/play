@@ -1,19 +1,54 @@
 const words = [
-  { word: "serenity", hint: "A calm state of mind" },
+  // === Easy Words ===
+  { word: "apple", hint: "A fruit that keeps the doctor away" },
+  { word: "river", hint: "Flows from the mountains to the sea" },
+  { word: "chair", hint: "You sit on it every day" },
+  { word: "cloud", hint: "Floats gently in the sky" },
+  { word: "music", hint: "Something you can hear and enjoy" },
+  { word: "dream", hint: "What you see while sleeping" },
+  { word: "sunset", hint: "When the day says goodbye" },
+  { word: "garden", hint: "A place where flowers bloom" },
+  { word: "friend", hint: "Someone who cares about you" },
+  { word: "mirror", hint: "It shows who you are" },
+  { word: "candle", hint: "It glows when lit" },
+  { word: "coffee", hint: "A morning ritual for many" },
+  { word: "forest", hint: "A home for trees and creatures" },
+  { word: "rainbow", hint: "Colors painted by light after rain" },
+  { word: "planet", hint: "A round traveler around the sun" },
+
+  // === Medium Words ===
+  { word: "harvest", hint: "It comes after patience and care" },
+  { word: "echo", hint: "It repeats what you say" },
+  { word: "island", hint: "Land surrounded by water" },
+  { word: "whisper", hint: "Quiet but powerful" },
+  { word: "thunder", hint: "You hear it after the flash" },
+  { word: "lantern", hint: "Carries light through darkness" },
+  { word: "voyage", hint: "A journey across distance or time" },
+  { word: "anchor", hint: "Keeps a ship steady" },
+  { word: "memory", hint: "Fades, but never truly vanishes" },
+  { word: "shadow", hint: "It follows you but never speaks" },
+  { word: "melody", hint: "A song without words" },
+  { word: "twilight", hint: "The hour between day and night" },
+  { word: "silence", hint: "Heard by all, spoken by none" },
+  { word: "compass", hint: "Always points you somewhere" },
+  { word: "tranquil", hint: "Still and peaceful, like calm water" },
+
+  // === Hard Words ===
   { word: "labyrinth", hint: "A maze, both literal and metaphorical" },
-  { word: "ephemeral", hint: "Lasts for a very short time" },
-  { word: "horizon", hint: "You can see it but never reach it" },
-  { word: "illusion", hint: "Seems real, but isn’t" },
-  { word: "whisper", hint: "Soft, fleeting, and secretive" },
-  { word: "solitude", hint: "Peace in one’s own company" },
-  { word: "melody", hint: "A tune carried by time" },
-  { word: "twilight", hint: "The sky’s in-between hour" },
-  { word: "fragrance", hint: "Invisible, yet unforgettable" },
-  { word: "voyage", hint: "A journey across vastness" },
-  { word: "ember", hint: "A faint glow after the flame" },
-  { word: "cascade", hint: "Water in graceful motion" },
-  { word: "silhouette", hint: "The outline that remains when light fades" },
-  { word: "tranquil", hint: "Undisturbed and at peace" }
+  { word: "serenity", hint: "Calmness that fills the soul" },
+  { word: "ephemeral", hint: "Lasts for only a fleeting moment" },
+  { word: "horizon", hint: "You see it but can never reach it" },
+  { word: "illusion", hint: "Appears real but isn’t" },
+  { word: "solitude", hint: "The company of oneself" },
+  { word: "cascade", hint: "Water dancing over rocks" },
+  { word: "silhouette", hint: "A shadow drawn by light" },
+  { word: "fragrance", hint: "Invisible yet unforgettable" },
+  { word: "ember", hint: "The last glow after the flame" },
+  { word: "luminous", hint: "Shining softly in the dark" },
+  { word: "enigmatic", hint: "Mysterious and puzzling" },
+  { word: "paradox", hint: "A truth wrapped in contradiction" },
+  { word: "celestial", hint: "Belonging to the stars" },
+  { word: "resonance", hint: "A sound that lingers long after it’s gone" }
 ];
 
 let currentWord = "";
@@ -27,7 +62,6 @@ const messageEl = document.getElementById("message");
 const checkBtn = document.getElementById("checkBtn");
 const newWordBtn = document.getElementById("newWordBtn");
 
-// Word shuffler ensuring it's not same as original
 function shuffleWord(word) {
   let shuffled;
   do {
@@ -36,7 +70,6 @@ function shuffleWord(word) {
   return shuffled;
 }
 
-// Load a new word
 function newWord() {
   const randomItem = words[Math.floor(Math.random() * words.length)];
   currentWord = randomItem.word.toLowerCase();
@@ -49,52 +82,31 @@ function newWord() {
   scrambledWordEl.classList.remove("glow");
 }
 
-// Confetti animation (soft pastel, fades out)
-function launchConfetti() {
-  const canvas = document.createElement("canvas");
-  canvas.style.position = "fixed";
-  canvas.style.top = 0;
-  canvas.style.left = 0;
-  canvas.style.width = "100%";
-  canvas.style.height = "100%";
-  canvas.style.pointerEvents = "none";
-  canvas.style.zIndex = 1000;
-  document.body.appendChild(canvas);
+// Confetti animation (soft, Expo-style)
+function triggerConfetti() {
+  const duration = 1.5 * 1000;
+  const end = Date.now() + duration;
 
-  const ctx = canvas.getContext("2d");
-  const confettis = Array.from({ length: 80 }).map(() => ({
-    x: Math.random() * window.innerWidth,
-    y: Math.random() * -window.innerHeight,
-    size: Math.random() * 6 + 3,
-    color: `hsl(${Math.random() * 40 + 290}, 80%, 70%)`,
-    speed: Math.random() * 2 + 1
-  }));
-
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    confettis.forEach(confetti => {
-      ctx.fillStyle = confetti.color;
-      ctx.globalAlpha = 0.85;
-      ctx.beginPath();
-      ctx.arc(confetti.x, confetti.y, confetti.size, 0, Math.PI * 2);
-      ctx.fill();
-      confetti.y += confetti.speed;
-      if (confetti.y > window.innerHeight) confetti.y = 0;
-    });
-    requestAnimationFrame(draw);
-  }
-
-  draw();
-  setTimeout(() => document.body.removeChild(canvas), 1800);
+  (function frame() {
+    createConfetti();
+    if (Date.now() < end) requestAnimationFrame(frame);
+  })();
 }
 
-// Subtle fade and glow animation for correct answers
+function createConfetti() {
+  const confetti = document.createElement("div");
+  confetti.classList.add("confetti");
+  confetti.style.left = Math.random() * 100 + "vw";
+  confetti.style.backgroundColor = `hsl(${Math.random() * 60 + 280}, 80%, 70%)`;
+  document.body.appendChild(confetti);
+  setTimeout(() => confetti.remove(), 2000);
+}
+
 function animateCorrectWord() {
   scrambledWordEl.classList.add("glow");
   scrambledWordEl.textContent = currentWord.toUpperCase();
 }
 
-// Clue logic
 checkBtn.addEventListener("click", () => {
   const userGuess = inputEl.value.trim().toLowerCase();
   if (!userGuess) {
@@ -104,20 +116,20 @@ checkBtn.addEventListener("click", () => {
   }
 
   if (userGuess === currentWord) {
-    messageEl.textContent = "Perfect! You’ve got it!";
+    messageEl.textContent = "Perfect! You got it!";
     messageEl.style.color = "#aaffaa";
     animateCorrectWord();
-    launchConfetti();
+    triggerConfetti();
   } else {
     tries++;
     messageEl.style.color = "#ffaaaa";
 
     if (tries === 1) {
-      messageEl.textContent = "Not quite — let your mind wander around the clue.";
+      messageEl.textContent = "Not quite — focus on the hint.";
     } else if (tries === 2) {
-      messageEl.textContent = "Think imagery — what does the clue *feel* like?";
+      messageEl.textContent = "Think slower — what does the clue *feel* like?";
     } else if (tries === 3) {
-      messageEl.textContent = "You’re close, slow down and visualize it.";
+      messageEl.textContent = "Almost there. Try visualizing the meaning.";
     } else {
       messageEl.textContent = `The word was '${currentWord.toUpperCase()}'. Try another.`;
       messageEl.style.color = "#99ccff";
