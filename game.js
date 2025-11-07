@@ -1,54 +1,39 @@
 const words = [
   // === Easy Words ===
   { word: "apple", hint: "A fruit that keeps the doctor away" },
-  { word: "river", hint: "Flows from the mountains to the sea" },
-  { word: "chair", hint: "You sit on it every day" },
   { word: "cloud", hint: "Floats gently in the sky" },
-  { word: "music", hint: "Something you can hear and enjoy" },
-  { word: "dream", hint: "What you see while sleeping" },
-  { word: "sunset", hint: "When the day says goodbye" },
   { word: "garden", hint: "A place where flowers bloom" },
-  { word: "friend", hint: "Someone who cares about you" },
-  { word: "mirror", hint: "It shows who you are" },
-  { word: "candle", hint: "It glows when lit" },
-  { word: "coffee", hint: "A morning ritual for many" },
-  { word: "forest", hint: "A home for trees and creatures" },
-  { word: "rainbow", hint: "Colors painted by light after rain" },
+  { word: "shadow", hint: "It follows you but never speaks" },
+  { word: "friend", hint: "Someone who truly listens" },
+  { word: "dream", hint: "A glimpse of imagination in sleep" },
+  { word: "forest", hint: "A home for trees and whispers" },
   { word: "planet", hint: "A round traveler around the sun" },
+  { word: "mirror", hint: "It reflects, but never lies" },
+  { word: "music", hint: "A rhythm that moves the soul" },
 
   // === Medium Words ===
   { word: "harvest", hint: "It comes after patience and care" },
-  { word: "echo", hint: "It repeats what you say" },
-  { word: "island", hint: "Land surrounded by water" },
-  { word: "whisper", hint: "Quiet but powerful" },
-  { word: "thunder", hint: "You hear it after the flash" },
-  { word: "lantern", hint: "Carries light through darkness" },
-  { word: "voyage", hint: "A journey across distance or time" },
-  { word: "anchor", hint: "Keeps a ship steady" },
-  { word: "memory", hint: "Fades, but never truly vanishes" },
-  { word: "shadow", hint: "It follows you but never speaks" },
-  { word: "melody", hint: "A song without words" },
-  { word: "twilight", hint: "The hour between day and night" },
-  { word: "silence", hint: "Heard by all, spoken by none" },
+  { word: "voyage", hint: "A journey across vastness" },
+  { word: "echo", hint: "Repeats what you say" },
   { word: "compass", hint: "Always points you somewhere" },
-  { word: "tranquil", hint: "Still and peaceful, like calm water" },
+  { word: "twilight", hint: "The sky’s in-between hour" },
+  { word: "melody", hint: "A song carried by time" },
+  { word: "horizon", hint: "You see it but can’t reach it" },
+  { word: "silence", hint: "Heard by all, spoken by none" },
+  { word: "anchor", hint: "Keeps a ship still in rough waves" },
+  { word: "whisper", hint: "Soft, secret, and fleeting" },
 
   // === Hard Words ===
-  { word: "labyrinth", hint: "A maze, both literal and metaphorical" },
-  { word: "serenity", hint: "Calmness that fills the soul" },
-  { word: "ephemeral", hint: "Lasts for only a fleeting moment" },
-  { word: "horizon", hint: "You see it but can never reach it" },
-  { word: "illusion", hint: "Appears real but isn’t" },
-  { word: "solitude", hint: "The company of oneself" },
-  { word: "cascade", hint: "Water dancing over rocks" },
-  { word: "silhouette", hint: "A shadow drawn by light" },
-  { word: "fragrance", hint: "Invisible yet unforgettable" },
-  { word: "ember", hint: "The last glow after the flame" },
-  { word: "luminous", hint: "Shining softly in the dark" },
-  { word: "enigmatic", hint: "Mysterious and puzzling" },
+  { word: "serenity", hint: "Peace that lives within stillness" },
+  { word: "labyrinth", hint: "A maze that confuses the mind" },
+  { word: "solitude", hint: "The art of being alone without loneliness" },
+  { word: "celestial", hint: "Of or relating to the heavens" },
   { word: "paradox", hint: "A truth wrapped in contradiction" },
-  { word: "celestial", hint: "Belonging to the stars" },
-  { word: "resonance", hint: "A sound that lingers long after it’s gone" }
+  { word: "ephemeral", hint: "Lasts for only a brief moment" },
+  { word: "enigmatic", hint: "Mysterious and hard to read" },
+  { word: "cascade", hint: "Water in graceful motion" },
+  { word: "fragrance", hint: "Invisible, but unforgettable" },
+  { word: "luminous", hint: "Softly glowing in the dark" }
 ];
 
 let currentWord = "";
@@ -75,14 +60,14 @@ function newWord() {
   currentWord = randomItem.word.toLowerCase();
   scrambled = shuffleWord(currentWord);
   scrambledWordEl.textContent = scrambled;
-  hintEl.textContent = `Hint: ${randomItem.hint}`;
+  hintEl.textContent = "";
   inputEl.value = "";
   messageEl.textContent = "";
   tries = 0;
   scrambledWordEl.classList.remove("glow");
 }
 
-// Confetti animation (soft, Expo-style)
+// Confetti animation
 function triggerConfetti() {
   const duration = 1.5 * 1000;
   const end = Date.now() + duration;
@@ -117,21 +102,26 @@ checkBtn.addEventListener("click", () => {
 
   if (userGuess === currentWord) {
     messageEl.textContent = "Perfect! You got it!";
-    messageEl.style.color = "#aaffaa";
+    messageEl.className = "message correct";
     animateCorrectWord();
     triggerConfetti();
   } else {
     tries++;
-    messageEl.style.color = "#ffaaaa";
+    messageEl.className = "message incorrect";
 
     if (tries === 1) {
-      messageEl.textContent = "Not quite — focus on the hint.";
+      messageEl.textContent = "Hmm… not quite yet. Try again!";
     } else if (tries === 2) {
-      messageEl.textContent = "Think slower — what does the clue *feel* like?";
+      messageEl.textContent = "Keep going! You’re getting warmer.";
     } else if (tries === 3) {
-      messageEl.textContent = "Almost there. Try visualizing the meaning.";
+      // Reveal the hint only now
+      const hintText = words.find(w => w.word === currentWord).hint;
+      hintEl.textContent = `Hint: ${hintText}`;
+      hintEl.classList.add("visible");
+      messageEl.textContent = "Here’s a little help — focus on the hint!";
+      messageEl.style.color = "#ffdd57";
     } else {
-      messageEl.textContent = `The word was '${currentWord.toUpperCase()}'. Try another.`;
+      messageEl.textContent = `The word was '${currentWord.toUpperCase()}'. Try another one!`;
       messageEl.style.color = "#99ccff";
     }
   }
