@@ -32,7 +32,6 @@ const messageEl = document.getElementById("message");
 const checkBtn = document.getElementById("checkBtn");
 const newWordBtn = document.getElementById("newWordBtn");
 
-// Shuffle word letters randomly, ensuring it’s not the same as the original
 function shuffleWord(word) {
   let shuffled = "";
   do {
@@ -41,19 +40,21 @@ function shuffleWord(word) {
   return shuffled;
 }
 
-// Load a new random word
 function newWord() {
   const randomItem = words[Math.floor(Math.random() * words.length)];
   currentWord = randomItem.word.toLowerCase();
   scrambled = shuffleWord(currentWord);
   scrambledWordEl.textContent = scrambled;
+
+  // Force update the hint every time new word loads
+  hintEl.style.opacity = "1";
   hintEl.textContent = `Hint: ${randomItem.hint}`;
+
   inputEl.value = "";
   messageEl.textContent = "";
   tries = 0;
 }
 
-// Confetti animation when user wins
 function launchConfetti() {
   const canvas = document.createElement("canvas");
   canvas.style.position = "fixed";
@@ -69,7 +70,7 @@ function launchConfetti() {
     x: Math.random() * window.innerWidth,
     y: Math.random() * -window.innerHeight,
     size: Math.random() * 8 + 2,
-    color: `hsl(${Math.random() * 50 + 290}, 80%, 60%)`, // gradient-themed colors
+    color: `hsl(${Math.random() * 50 + 290}, 80%, 60%)`,
     speed: Math.random() * 3 + 2
   }));
 
@@ -88,7 +89,6 @@ function launchConfetti() {
   setTimeout(() => document.body.removeChild(canvas), 2000);
 }
 
-// Guess logic with subtle clues
 checkBtn.addEventListener("click", () => {
   const userGuess = inputEl.value.trim().toLowerCase();
   if (!userGuess) {

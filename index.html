@@ -1,37 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Word Scramble Challenge</title>
-    <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Word Scramble Challenge</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-    <div class="container">
-        <h1 class="fade-in">Word Scramble Challenge</h1>
-        <p class="subtitle fade-in">Unscramble the letters to reveal the word!</p>
+  <div class="container fade-in">
+    <h1>Word Scramble Challenge</h1>
+    <p class="subtitle">Unscramble the letters to reveal the hidden word!</p>
 
-        <div class="game-box slide-up">
-            <div class="scrambled-word" id="scrambledWord">_ _ _</div>
-            <input type="text" id="userInput" placeholder="Type your answer here" autofocus />
-            <div class="hint" id="hint">Hint: _ _ _</div>
+    <div class="game-box slide-up">
+      <div class="scrambled-word" id="scrambledWord">_ _ _</div>
 
-            <div class="buttons">
-                <button id="checkBtn">Check</button>
-                <button id="newWordBtn">New Word</button>
-            </div>
+      <!-- Hint is placed before input for better visibility -->
+      <div class="hint fade-in" id="hint">Hint: _ _ _</div>
 
-            <p class="message" id="message"></p>
-        </div>
+      <input 
+        type="text" 
+        id="userInput" 
+        placeholder="Type your answer here" 
+        autocomplete="off"
+        autofocus
+      />
+
+      <div class="buttons">
+        <button id="checkBtn">Check</button>
+        <button id="newWordBtn">New Word</button>
+      </div>
+
+      <p class="message" id="message"></p>
     </div>
+  </div>
 
-    <footer>
-        <p>Built for Expo 2025 • Scan the QR to Play!</p>
-    </footer>
+  <footer>
+    <p>Built for Expo 2025 • Scan the QR to Play Instantly!</p>
+  </footer>
 
-    <script src="game.js"></script>
+  <script src="game.js"></script>
 </body>
-
 </html>
