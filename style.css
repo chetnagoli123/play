@@ -215,8 +215,8 @@ footer {
   width: 10px;
   height: 10px;
   border-radius: 60%;
-  opacity: 0.40;
-  animation: fall 2s linear forwards;
+  opacity: 0.90;
+  animation: fall 3s linear forwards;
   z-index: 9999;
 }
 
