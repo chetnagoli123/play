@@ -13,7 +13,12 @@ const words = [
   { word: "galaxy", hint: "A home of countless stars" },
   { word: "horizon", hint: "You see it but can never reach it" },
   { word: "illusion", hint: "It looks real but isn’t" },
-  { word: "silence", hint: "Heard by all, spoken by none" }
+  { word: "silence", hint: "Heard by all, spoken by none" },
+  { word: "harvest", hint: "It comes after months of waiting" },
+  { word: "thunder", hint: "You hear it after the flash" },
+  { word: "anchor", hint: "It holds steady beneath the waves" },
+  { word: "compass", hint: "Always points you somewhere" },
+  { word: "lantern", hint: "A small light in the dark" }
 ];
 
 let currentWord = "";
@@ -28,7 +33,12 @@ const checkBtn = document.getElementById("checkBtn");
 const newWordBtn = document.getElementById("newWordBtn");
 
 function shuffleWord(word) {
-  return word.split("").sort(() => Math.random() - 0.5).join("");
+  // Prevent easy reversals by ensuring a strong scramble
+  let shuffled = "";
+  do {
+    shuffled = word.split("").sort(() => Math.random() - 0.5).join("");
+  } while (shuffled === word); 
+  return shuffled;
 }
 
 function newWord() {
@@ -58,19 +68,20 @@ checkBtn.addEventListener("click", () => {
     messageEl.textContent = "Try again!";
     messageEl.style.color = "#ffaaaa";
 
-    // Show an extra clue after 2 failed attempts
     if (tries === 2) {
-      const extraClue = generateExtraClue(currentWord);
-      messageEl.textContent = `Almost there! Here's a clue: ${extraClue}`;
+      const firstTwo = currentWord.slice(0, 2).toUpperCase();
+      messageEl.textContent = `Almost there! It begins with '${firstTwo}...'`;
       messageEl.style.color = "#ffdd57";
+    } else if (tries === 3) {
+      const lastLetter = currentWord.slice(-1).toUpperCase();
+      messageEl.textContent = `Another clue: It ends with '${lastLetter}'.`;
+      messageEl.style.color = "#ffdd57";
+    } else if (tries >= 4) {
+      messageEl.textContent = `Hint overload! The word was '${currentWord.toUpperCase()}'. Try a new one!`;
+      messageEl.style.color = "#99ccff";
     }
   }
 });
-
-function generateExtraClue(word) {
-  const revealed = word.slice(0, 2);
-  return `The word starts with '${revealed.toUpperCase()}'`;
-}
 
 newWordBtn.addEventListener("click", newWord);
 window.addEventListener("load", newWord);
