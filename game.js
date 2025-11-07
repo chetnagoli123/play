@@ -1,19 +1,24 @@
 const words = [
-  { word: "planet", hint: "A large object orbiting a star" },
-  { word: "forest", hint: "A place full of trees" },
-  { word: "music", hint: "Something you can hear and enjoy" },
-  { word: "rainbow", hint: "Appears in the sky after rain" },
-  { word: "ocean", hint: "A vast body of salt water" },
-  { word: "coffee", hint: "A popular morning drink" },
-  { word: "mirror", hint: "It reflects your image" },
-  { word: "candle", hint: "It gives light when lit" },
-  { word: "friend", hint: "Someone who cares about you" },
-  { word: "dream", hint: "What you see while sleeping" }
+  { word: "bridge", hint: "It connects two sides" },
+  { word: "whisper", hint: "Quiet but powerful" },
+  { word: "puzzle", hint: "You solve it piece by piece" },
+  { word: "shadow", hint: "It follows you everywhere" },
+  { word: "feather", hint: "Light as air but can’t fly alone" },
+  { word: "island", hint: "Surrounded by water" },
+  { word: "mirror", hint: "It shows your reflection" },
+  { word: "forest", hint: "Where trees crowd together" },
+  { word: "candle", hint: "It burns to give light" },
+  { word: "memory", hint: "It fades but never truly disappears" },
+  { word: "echo", hint: "It repeats what you say" },
+  { word: "galaxy", hint: "A home of countless stars" },
+  { word: "horizon", hint: "You see it but can never reach it" },
+  { word: "illusion", hint: "It looks real but isn’t" },
+  { word: "silence", hint: "Heard by all, spoken by none" }
 ];
 
 let currentWord = "";
 let scrambled = "";
-let streak = 0; // track correct guesses in a row
+let tries = 0;
 
 const scrambledWordEl = document.getElementById("scrambledWord");
 const hintEl = document.getElementById("hint");
@@ -21,11 +26,6 @@ const inputEl = document.getElementById("userInput");
 const messageEl = document.getElementById("message");
 const checkBtn = document.getElementById("checkBtn");
 const newWordBtn = document.getElementById("newWordBtn");
-
-const streakDisplay = document.createElement("div");
-streakDisplay.classList.add("streak");
-document.querySelector(".container").appendChild(streakDisplay);
-updateStreak();
 
 function shuffleWord(word) {
   return word.split("").sort(() => Math.random() - 0.5).join("");
@@ -39,6 +39,7 @@ function newWord() {
   hintEl.textContent = `Hint: ${randomItem.hint}`;
   inputEl.value = "";
   messageEl.textContent = "";
+  tries = 0;
 }
 
 checkBtn.addEventListener("click", () => {
@@ -48,44 +49,27 @@ checkBtn.addEventListener("click", () => {
     messageEl.style.color = "#ffdd57";
     return;
   }
+
   if (userGuess === currentWord) {
-    messageEl.textContent = "Correct! Great job!";
+    messageEl.textContent = "Correct! Well done!";
     messageEl.style.color = "#aaffaa";
-    streak++;
-    updateStreak();
-    triggerConfetti();
   } else {
+    tries++;
     messageEl.textContent = "Try again!";
     messageEl.style.color = "#ffaaaa";
-    streak = 0;
-    updateStreak();
+
+    // Show an extra clue after 2 failed attempts
+    if (tries === 2) {
+      const extraClue = generateExtraClue(currentWord);
+      messageEl.textContent = `Almost there! Here's a clue: ${extraClue}`;
+      messageEl.style.color = "#ffdd57";
+    }
   }
 });
 
-function updateStreak() {
-  streakDisplay.textContent = `🔥 Streak: ${streak}`;
-  streakDisplay.style.marginTop = "10px";
-  streakDisplay.style.fontWeight = "600";
-}
-
-function triggerConfetti() {
-  const duration = 1 * 1000; // 1 second
-  const end = Date.now() + duration;
-
-  (function frame() {
-    createConfetti();
-    if (Date.now() < end) requestAnimationFrame(frame);
-  })();
-}
-
-function createConfetti() {
-  const confetti = document.createElement("div");
-  confetti.classList.add("confetti");
-  confetti.style.left = Math.random() * 100 + "vw";
-  confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 70%)`;
-  document.body.appendChild(confetti);
-
-  setTimeout(() => confetti.remove(), 2000);
+function generateExtraClue(word) {
+  const revealed = word.slice(0, 2);
+  return `The word starts with '${revealed.toUpperCase()}'`;
 }
 
 newWordBtn.addEventListener("click", newWord);
