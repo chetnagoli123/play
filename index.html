@@ -2,21 +2,33 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Word Scramble Challenge</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
-    <h1>Word Scramble</h1>
-    <p class="instructions">Unscramble the letters to form a correct word.</p>
-    <div id="scrambledWord" class="word-box"></div>
-    <input id="guess" type="text" placeholder="Enter your guess">
-    <button id="submitBtn">Check</button>
-    <p id="result"></p>
-    <p class="score">Score: <span id="scoreValue">0</span></p>
-    <button id="nextBtn">Next Word</button>
+    <h1 class="fade-in">Word Scramble Challenge</h1>
+    <p class="subtitle fade-in">Unscramble the letters to reveal the word!</p>
+
+    <div class="game-box slide-up">
+      <div class="scrambled-word" id="scrambledWord">_ _ _</div>
+      <input type="text" id="userInput" placeholder="Type your answer here" autofocus />
+      <div class="hint" id="hint">Hint: _ _ _</div>
+
+      <div class="buttons">
+        <button id="checkBtn">Check</button>
+        <button id="newWordBtn">New Word</button>
+      </div>
+
+      <p class="message" id="message"></p>
+    </div>
   </div>
+
+  <footer>
+    <p>Built for Expo 2025 • Scan the QR to Play!</p>
+  </footer>
+
   <script src="game.js"></script>
 </body>
 </html>
