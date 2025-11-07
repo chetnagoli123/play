@@ -208,3 +208,24 @@ footer {
     transform: scale(1);
   }
 }
+
+.confetti {
+  position: fixed;
+  top: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 60%;
+  opacity: 0.10;
+  animation: fall 2s linear forwards;
+  z-index: 9999;
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(0) rotate(0);
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
