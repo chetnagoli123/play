@@ -32,15 +32,16 @@ const messageEl = document.getElementById("message");
 const checkBtn = document.getElementById("checkBtn");
 const newWordBtn = document.getElementById("newWordBtn");
 
+// Shuffle word letters randomly, ensuring it’s not the same as the original
 function shuffleWord(word) {
-  // Prevent easy reversals by ensuring a strong scramble
   let shuffled = "";
   do {
     shuffled = word.split("").sort(() => Math.random() - 0.5).join("");
-  } while (shuffled === word); 
+  } while (shuffled === word);
   return shuffled;
 }
 
+// Load a new random word
 function newWord() {
   const randomItem = words[Math.floor(Math.random() * words.length)];
   currentWord = randomItem.word.toLowerCase();
@@ -52,6 +53,42 @@ function newWord() {
   tries = 0;
 }
 
+// Confetti animation when user wins
+function launchConfetti() {
+  const canvas = document.createElement("canvas");
+  canvas.style.position = "fixed";
+  canvas.style.top = 0;
+  canvas.style.left = 0;
+  canvas.style.width = "100%";
+  canvas.style.height = "100%";
+  canvas.style.pointerEvents = "none";
+  document.body.appendChild(canvas);
+
+  const ctx = canvas.getContext("2d");
+  const confettis = Array.from({ length: 120 }).map(() => ({
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * -window.innerHeight,
+    size: Math.random() * 8 + 2,
+    color: `hsl(${Math.random() * 50 + 290}, 80%, 60%)`, // gradient-themed colors
+    speed: Math.random() * 3 + 2
+  }));
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    confettis.forEach(confetti => {
+      ctx.fillStyle = confetti.color;
+      ctx.fillRect(confetti.x, confetti.y, confetti.size, confetti.size);
+      confetti.y += confetti.speed;
+      if (confetti.y > window.innerHeight) confetti.y = 0;
+    });
+    requestAnimationFrame(draw);
+  }
+
+  draw();
+  setTimeout(() => document.body.removeChild(canvas), 2000);
+}
+
+// Guess logic with subtle clues
 checkBtn.addEventListener("click", () => {
   const userGuess = inputEl.value.trim().toLowerCase();
   if (!userGuess) {
@@ -63,21 +100,19 @@ checkBtn.addEventListener("click", () => {
   if (userGuess === currentWord) {
     messageEl.textContent = "Correct! Well done!";
     messageEl.style.color = "#aaffaa";
+    launchConfetti();
   } else {
     tries++;
-    messageEl.textContent = "Try again!";
     messageEl.style.color = "#ffaaaa";
 
-    if (tries === 2) {
-      const firstTwo = currentWord.slice(0, 2).toUpperCase();
-      messageEl.textContent = `Almost there! It begins with '${firstTwo}...'`;
-      messageEl.style.color = "#ffdd57";
+    if (tries === 1) {
+      messageEl.textContent = "Not quite. Think of the hint carefully.";
+    } else if (tries === 2) {
+      messageEl.textContent = "Closer! Try rearranging it in your head.";
     } else if (tries === 3) {
-      const lastLetter = currentWord.slice(-1).toUpperCase();
-      messageEl.textContent = `Another clue: It ends with '${lastLetter}'.`;
-      messageEl.style.color = "#ffdd57";
-    } else if (tries >= 4) {
-      messageEl.textContent = `Hint overload! The word was '${currentWord.toUpperCase()}'. Try a new one!`;
+      messageEl.textContent = "You’re circling around it — stay focused!";
+    } else {
+      messageEl.textContent = `The word was '${currentWord.toUpperCase()}'. Try another!`;
       messageEl.style.color = "#99ccff";
     }
   }
