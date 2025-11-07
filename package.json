@@ -1,0 +1,17 @@
+{
+  "name": "word-scramble-play",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "build": "rm -rf dist && mkdir -p dist && cp -R public/* dist/",
+    "qr": "node generate-qr.js"
+  },
+  "dependencies": {
+    "qrcode": "^1.5.4"
+  },
+  "main": "generate-qr.js",
+  "keywords": [],
+  "author": "",
+  "description": ""
+}
