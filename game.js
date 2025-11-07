@@ -1,24 +1,19 @@
 const words = [
-  { word: "bridge", hint: "It connects two sides" },
-  { word: "whisper", hint: "Quiet but powerful" },
-  { word: "puzzle", hint: "You solve it piece by piece" },
-  { word: "shadow", hint: "It follows you everywhere" },
-  { word: "feather", hint: "Light as air but can’t fly alone" },
-  { word: "island", hint: "Surrounded by water" },
-  { word: "mirror", hint: "It shows your reflection" },
-  { word: "forest", hint: "Where trees crowd together" },
-  { word: "candle", hint: "It burns to give light" },
-  { word: "memory", hint: "It fades but never truly disappears" },
-  { word: "echo", hint: "It repeats what you say" },
-  { word: "galaxy", hint: "A home of countless stars" },
-  { word: "horizon", hint: "You see it but can never reach it" },
-  { word: "illusion", hint: "It looks real but isn’t" },
-  { word: "silence", hint: "Heard by all, spoken by none" },
-  { word: "harvest", hint: "It comes after months of waiting" },
-  { word: "thunder", hint: "You hear it after the flash" },
-  { word: "anchor", hint: "It holds steady beneath the waves" },
-  { word: "compass", hint: "Always points you somewhere" },
-  { word: "lantern", hint: "A small light in the dark" }
+  { word: "serenity", hint: "A calm state of mind" },
+  { word: "labyrinth", hint: "A maze, both literal and metaphorical" },
+  { word: "ephemeral", hint: "Lasts for a very short time" },
+  { word: "horizon", hint: "You can see it but never reach it" },
+  { word: "illusion", hint: "Seems real, but isn’t" },
+  { word: "whisper", hint: "Soft, fleeting, and secretive" },
+  { word: "solitude", hint: "Peace in one’s own company" },
+  { word: "melody", hint: "A tune carried by time" },
+  { word: "twilight", hint: "The sky’s in-between hour" },
+  { word: "fragrance", hint: "Invisible, yet unforgettable" },
+  { word: "voyage", hint: "A journey across vastness" },
+  { word: "ember", hint: "A faint glow after the flame" },
+  { word: "cascade", hint: "Water in graceful motion" },
+  { word: "silhouette", hint: "The outline that remains when light fades" },
+  { word: "tranquil", hint: "Undisturbed and at peace" }
 ];
 
 let currentWord = "";
@@ -32,29 +27,29 @@ const messageEl = document.getElementById("message");
 const checkBtn = document.getElementById("checkBtn");
 const newWordBtn = document.getElementById("newWordBtn");
 
+// Word shuffler ensuring it's not same as original
 function shuffleWord(word) {
-  let shuffled = "";
+  let shuffled;
   do {
     shuffled = word.split("").sort(() => Math.random() - 0.5).join("");
   } while (shuffled === word);
   return shuffled;
 }
 
+// Load a new word
 function newWord() {
   const randomItem = words[Math.floor(Math.random() * words.length)];
   currentWord = randomItem.word.toLowerCase();
   scrambled = shuffleWord(currentWord);
   scrambledWordEl.textContent = scrambled;
-
-  // Force update the hint every time new word loads
-  hintEl.style.opacity = "1";
   hintEl.textContent = `Hint: ${randomItem.hint}`;
-
   inputEl.value = "";
   messageEl.textContent = "";
   tries = 0;
+  scrambledWordEl.classList.remove("glow");
 }
 
+// Confetti animation (soft pastel, fades out)
 function launchConfetti() {
   const canvas = document.createElement("canvas");
   canvas.style.position = "fixed";
@@ -63,22 +58,26 @@ function launchConfetti() {
   canvas.style.width = "100%";
   canvas.style.height = "100%";
   canvas.style.pointerEvents = "none";
+  canvas.style.zIndex = 1000;
   document.body.appendChild(canvas);
 
   const ctx = canvas.getContext("2d");
-  const confettis = Array.from({ length: 120 }).map(() => ({
+  const confettis = Array.from({ length: 80 }).map(() => ({
     x: Math.random() * window.innerWidth,
     y: Math.random() * -window.innerHeight,
-    size: Math.random() * 8 + 2,
-    color: `hsl(${Math.random() * 50 + 290}, 80%, 60%)`,
-    speed: Math.random() * 3 + 2
+    size: Math.random() * 6 + 3,
+    color: `hsl(${Math.random() * 40 + 290}, 80%, 70%)`,
+    speed: Math.random() * 2 + 1
   }));
 
   function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     confettis.forEach(confetti => {
       ctx.fillStyle = confetti.color;
-      ctx.fillRect(confetti.x, confetti.y, confetti.size, confetti.size);
+      ctx.globalAlpha = 0.85;
+      ctx.beginPath();
+      ctx.arc(confetti.x, confetti.y, confetti.size, 0, Math.PI * 2);
+      ctx.fill();
       confetti.y += confetti.speed;
       if (confetti.y > window.innerHeight) confetti.y = 0;
     });
@@ -86,9 +85,16 @@ function launchConfetti() {
   }
 
   draw();
-  setTimeout(() => document.body.removeChild(canvas), 2000);
+  setTimeout(() => document.body.removeChild(canvas), 1800);
 }
 
+// Subtle fade and glow animation for correct answers
+function animateCorrectWord() {
+  scrambledWordEl.classList.add("glow");
+  scrambledWordEl.textContent = currentWord.toUpperCase();
+}
+
+// Clue logic
 checkBtn.addEventListener("click", () => {
   const userGuess = inputEl.value.trim().toLowerCase();
   if (!userGuess) {
@@ -98,21 +104,22 @@ checkBtn.addEventListener("click", () => {
   }
 
   if (userGuess === currentWord) {
-    messageEl.textContent = "Correct! Well done!";
+    messageEl.textContent = "Perfect! You’ve got it!";
     messageEl.style.color = "#aaffaa";
+    animateCorrectWord();
     launchConfetti();
   } else {
     tries++;
     messageEl.style.color = "#ffaaaa";
 
     if (tries === 1) {
-      messageEl.textContent = "Not quite. Think of the hint carefully.";
+      messageEl.textContent = "Not quite — let your mind wander around the clue.";
     } else if (tries === 2) {
-      messageEl.textContent = "Closer! Try rearranging it in your head.";
+      messageEl.textContent = "Think imagery — what does the clue *feel* like?";
     } else if (tries === 3) {
-      messageEl.textContent = "You’re circling around it — stay focused!";
+      messageEl.textContent = "You’re close, slow down and visualize it.";
     } else {
-      messageEl.textContent = `The word was '${currentWord.toUpperCase()}'. Try another!`;
+      messageEl.textContent = `The word was '${currentWord.toUpperCase()}'. Try another.`;
       messageEl.style.color = "#99ccff";
     }
   }
